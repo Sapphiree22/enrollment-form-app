@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Enrollment Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='enrollment-form.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='educational_bg.css') }}">
+    <link rel="stylesheet" href="css/enrollment-form.css">
+    <link rel="stylesheet" href="css/educational_bg.css">
 </head>
 <body>
 
@@ -21,17 +21,16 @@
 
     <!-- Step Progress -->
     <div class="steps">
-        <a href="{{ url_for('form') }}" class="step-btn">Personal Data</a>
+        <a href="personaldetails.html" class="step-btn">Personal Data</a>
         <span class="arrow">→</span>
-        <a href="{{ url_for('educational_background') }}" class="step-btn active">Educational Background</a>
+        <a href="educational_bg.html" class="step-btn active">Educational Background</a>
         <span class="arrow">→</span>
-        <a href="{{ url_for('course_detail') }}" class="step-btn">Course Detail</a>
+        <a href="course-detail.html" class="step-btn">Course Detail</a>
         <span class="arrow">→</span>
-        <a href="{{ url_for('upload_requirements') }}" class="step-btn">Upload Requirements</a>
+        <a href="upload_requirements.html" class="step-btn">Upload Requirements</a>
     </div>
 
-
-    <form id="eduForm" method="POST" action="{{ url_for('educational_background') }}">
+    <form id="eduForm" method="POST" action="educational_bg.html" onsubmit="return validateEduForm()">
 
         <div class="first-gen">
             <label>Are you a first generation student?</label> 
@@ -45,38 +44,67 @@
         <label class="school-label">Schools</label>
 
         <!-- Elementary -->
-        <input type="text" name="elementary" placeholder="Elementary" required>
-        <input type="text" name="elem_year" placeholder="Academic Year" required>
-        <input type="text" name="elem_honors" placeholder="Honors Received" required>
+        <input type="text" id="elementary" name="elementary" placeholder="Elementary" required>
+        <input type="text" id="elem_year" name="elem_year" placeholder="Academic Year" required>
+        <input type="text" id="elem_honors" name="elem_honors" placeholder="Honors Received" required>
 
         <!-- High School -->
-        <input type="text" name="highschool" placeholder="High School" required>
-        <input type="text" name="hs_year" placeholder="Academic Year" required>
-        <input type="text" name="hs_honors" placeholder="Honors Received" required>
+        <input type="text" id="highschool" name="highschool" placeholder="High School" required>
+        <input type="text" id="hs_year" name="hs_year" placeholder="Academic Year" required>
+        <input type="text" id="hs_honors" name="hs_honors" placeholder="Honors Received" required>
 
         <!-- College -->
-        <input type="text" name="college" placeholder="College" required>
-        <input type="text" name="college_year" placeholder="Academic Year" required>
-        <input type="text" name="college_honors" placeholder="Honors Received" required>
+        <input type="text" id="college" name="college" placeholder="College" required>
+        <input type="text" id="college_year" name="college_year" placeholder="Academic Year" required>
+        <input type="text" id="college_honors" name="college_honors" placeholder="Honors Received" required>
 
         <hr class="form-divider">
 
         <!-- Buttons -->
         <div class="button-row">
             <button type="submit" class="next">Next</button>
-            <button type="button" class="cancel">Cancel</button>
+            <button type="button" class="cancel" onclick="window.location.href='personaldetails.html'">Cancel</button>
         </div>
     </form>
 </div>
 
 <script>
-function validateAndGo() {
-    const form = document.getElementById('eduForm');
-    if (form.checkValidity()) {
-        form.submit();  // submits to Flask route
-    } else {
-        form.reportValidity();  // show HTML5 validation messages
+function validateEduForm() {
+    const textPattern = /^[A-Za-z\s]+$/; // Letters and spaces only
+
+    const fields = [
+        { id: "elementary", label: "Elementary School" },
+        { id: "elem_year", label: "Elementary Academic Year" },
+        { id: "elem_honors", label: "Elementary Honors" },
+        { id: "highschool", label: "High School" },
+        { id: "hs_year", label: "High School Academic Year" },
+        { id: "hs_honors", label: "High School Honors" },
+        { id: "college", label: "College" },
+        { id: "college_year", label: "College Academic Year" },
+        { id: "college_honors", label: "College Honors" }
+    ];
+
+    for (let field of fields) {
+        const value = document.getElementById(field.id).value.trim();
+
+        // Check if empty
+        if (value === "") {
+            alert(`${field.label} cannot be empty.`);
+            document.getElementById(field.id).focus();
+            return false;
+        }
+
+        // Check for letters only (for schools and honors)
+        if ((field.id.includes("honors") || field.id === "elementary" || field.id === "highschool" || field.id === "college") 
+            && !textPattern.test(value)) {
+            alert(`${field.label} must not contain numbers or special characters.`);
+            document.getElementById(field.id).focus();
+            return false;
+        }
     }
+
+    // If all checks passed
+    return true;
 }
 </script>
 
