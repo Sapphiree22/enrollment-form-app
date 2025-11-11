@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Enrollment Form</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='enrollment-form.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='upload-requirements.css') }}" />
+  <link rel="stylesheet" href="css/enrollment-form.css">
+  <link rel="stylesheet" href="css/upload_requirements.css">
 </head>
 <body>
 
@@ -22,51 +22,45 @@
 
     <!-- Step Progress -->
     <div class="steps">
-      <a href="{{ url_for('form') }}" class="step-btn">Personal Data</a>
+      <a href="personaldetails.html" class="step-btn">Personal Data</a>
       <span class="arrow">→</span>
-      <a href="{{ url_for('educational_background') }}" class="step-btn">Educational Background</a>
+      <a href="educational_bg.html" class="step-btn">Educational Background</a>
       <span class="arrow">→</span>
-      <a href="{{ url_for('course_detail') }}" class="step-btn">Course Detail</a>
+      <a href="course-detail.html" class="step-btn">Course Detail</a>
       <span class="arrow">→</span>
-      <a href="{{ url_for('upload_requirements') }}" class="step-btn active">Upload Requirements</a>
+      <a href="upload_requirements.html" class="step-btn active">Upload Requirements</a>
     </div>
 
-    <form id="uploadForm" method="POST" action="{{ url_for('upload_requirements') }}" enctype="multipart/form-data">
+    <form id="uploadForm" method="POST" action="upload_requirements.html" enctype="multipart/form-data">
 
       <!-- Medical Certificate -->
       <div class="file-section">
         <label>Medical Certificate</label>
         <div class="file-box">
-          <input type="file" name="medical_certificate" id="medical_certificate" accept=".pdf, .jpg, .jpeg, .png" required />
+          <input type="file" name="medical_certificate" id="medical_certificate" accept=".pdf, .jpg, .jpeg, .png" required>
         </div>
-        <p class="file-info">
-          Accepted formats: PDF, JPG, PNG — Max size: 5MB<br />
-          File name must follow this format: <strong>Lastname_Firstname_Medical.pdf</strong>
-        </p>
+        <p class="file-info">Accepted formats: PDF, JPG, PNG — Max size: 5MB<br>
+        File name must follow this format: <strong>Lastname_Firstname_Medical.pdf</strong></p>
       </div>
 
       <!-- Grades -->
       <div class="file-section">
         <label>Grades</label>
         <div class="file-box">
-          <input type="file" name="grades" id="grades" accept=".pdf, .jpg, .jpeg, .png" required />
+          <input type="file" name="grades" id="grades" accept=".pdf, .jpg, .jpeg, .png" required>
         </div>
-        <p class="file-info">
-          Accepted formats: PDF, JPG, PNG — Max size: 5MB<br />
-          File name must follow this format: <strong>Lastname_Firstname_Grades.pdf</strong>
-        </p>
+        <p class="file-info">Accepted formats: PDF, JPG, PNG — Max size: 5MB<br>
+        File name must follow this format: <strong>Lastname_Firstname_Grades.pdf</strong></p>
       </div>
 
       <!-- Organization Fee Receipt -->
       <div class="file-section">
         <label>Organization Fee Receipt</label>
         <div class="file-box">
-          <input type="file" name="org_fee" id="org_fee" accept=".pdf, .jpg, .jpeg, .png" required />
+          <input type="file" name="org_fee" id="org_fee" accept=".pdf, .jpg, .jpeg, .png" required>
         </div>
-        <p class="file-info">
-          Accepted formats: PDF, JPG, PNG — Max size: 5MB<br />
-          File name must follow this format: <strong>Lastname_Firstname_OrgFee.pdf</strong>
-        </p>
+        <p class="file-info">Accepted formats: PDF, JPG, PNG — Max size: 5MB<br>
+        File name must follow this format: <strong>Lastname_Firstname_OrgFee.pdf</strong></p>
       </div>
 
       <!-- Buttons -->
@@ -81,5 +75,54 @@
     &copy; 2025 Enrollment Form | Group 2
   </footer>
 
+  <!-- File Validation Script -->
+  <script>
+    const form = document.getElementById('uploadForm');
+
+    // File configuration: input ID and required type in the filename
+    const filesConfig = [
+      { id: 'medical_certificate', type: 'Medical' },
+      { id: 'grades', type: 'Grades' },
+      { id: 'org_fee', type: 'OrgFee' }
+    ];
+
+    form.addEventListener('submit', function(e) {
+      for (let fileConfig of filesConfig) {
+        const input = document.getElementById(fileConfig.id);
+        const file = input.files[0];
+
+        if (!file) {
+          alert(`Please upload your ${fileConfig.type} file.`);
+          e.preventDefault();
+          return;
+        }
+
+        // File type validation
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+          alert(`${fileConfig.type} must be PDF, JPG, or PNG.`);
+          e.preventDefault();
+          return;
+        }
+
+        // File size validation (max 5MB)
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+          alert(`${fileConfig.type} exceeds the maximum size of 5MB.`);
+          e.preventDefault();
+          return;
+        }
+
+        // File name validation: Lastname_Firstname_Type.extension
+        const fileNamePattern = new RegExp(`^[A-Za-z]+_[A-Za-z]+_${fileConfig.type}\\.(pdf|jpg|jpeg|png)$`);
+        if (!fileNamePattern.test(file.name)) {
+          alert(`${fileConfig.type} file name must follow this format: Lastname_Firstname_${fileConfig.type}.pdf (or .jpg/.png).`);
+          e.preventDefault();
+          return;
+        }
+      }
+    });
+  </script>
+
 </body>
-</html> 
+</html>
