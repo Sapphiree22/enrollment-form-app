@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Enrollment Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='enrollment-form.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='personaldetails.css') }}">
+    <link rel="stylesheet" href="css/enrollment-form.css">
+    <link rel="stylesheet" href="css/personaldetails.css">
 </head>
 <body>
 
-<!-- Header Bar -->
 <div class="header-bar">
     <h2>Student Enrollment Form</h2>
 </div>
@@ -19,69 +18,101 @@
 </div>
 
 <div class="form-container">
-    <!-- Step Progress -->
     <div class="steps">
-        <a href="{{ url_for('form') }}" class="step-btn active">Personal Data</a>
+        <a href="personaldetails.html" class="step-btn active">Personal Data</a>
         <span class="arrow">→</span>
-        <a href="{{ url_for('educational_background') }}" class="step-btn">Educational Background</a>
+        <a href="educational_bg.html" class="step-btn">Educational Background</a>
         <span class="arrow">→</span>
-        <a href="{{ url_for('course_detail') }}" class="step-btn">Course Detail</a>
+        <a href="course-detail.html" class="step-btn">Course Detail</a>
         <span class="arrow">→</span>
-        <a href="{{ url_for('upload_requirements') }}" class="step-btn">Upload Requirements</a>
+        <a href="upload_requirements.html" class="step-btn">Upload Requirements</a>
     </div>
 
     <div class="form-card">
         <form id="enrollForm" method="POST" action="/submit">
+
             <!-- First Row -->
-             <input type="text" name="first_name" placeholder="First Name*" 
+            <input type="text" name="first_name" placeholder="First Name*" 
                    pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed" required>
+
             <input type="text" name="last_name" placeholder="Last Name*" 
                    pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed" required>
-            <input type="text" name="middle_name" placeholder="Middle Name*" 
+
+            <input type="text" name="middle_name" placeholder="Middle Name (Optional)" 
                    pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed">
 
             <!-- Second Row -->
-            <input type="text" name="address" placeholder="Home Address" class="full-width" required>
-            <input type="text" name="contact" placeholder="Contact No." pattern="\d{11}" title="Enter 11-digit phone number" required>
-            <input type="text" name="district" placeholder="Congressional District" required>
+            <input type="text" name="address" placeholder="Home Address*" class="full-width" required>
+
+            <input type="text" name="contact" placeholder="Contact No. (e.g. 09XXXXXXXXX)" 
+                   pattern="^09\d{9}$" title="Enter a valid 11-digit Philippine number starting with 09" required>
+
+            <input type="text" name="district" placeholder="Congressional District*" required>
 
             <!-- Third Row -->
-            <input type="email" name="email" placeholder="Email" class="full-width" required>
+            <input type="email" name="email" placeholder="Email*" class="full-width" required>
 
             <select name="gender" required>
                 <option value="">Select Gender</option>
                 <option>Male</option>
                 <option>Female</option>
+                <option>Other / Prefer not to say</option>
             </select>
-            <input type="date" name="birthdate" placeholder="Birthdate" required>
-            <input type="text" name="lrn" placeholder="LRN" pattern="\d{12}" title="Enter 12-digit LRN" required>
-            <input type="number" name="age" placeholder="Age" min="1" max="120" required>
 
-            <input type="text" name="citizenship" placeholder="Citizenship" required>
+            <input type="date" name="birthdate" placeholder="Birthdate*" required>
+
+            <input type="text" name="lrn" placeholder="LRN*" 
+                   pattern="^\d{12}$" title="Enter a 12-digit numeric LRN only" required>
+
+            <input type="number" name="age" placeholder="Age*" min="1" max="50" required>
+
+            <!-- Citizenship (no numbers allowed) -->
+            <input type="text" name="citizenship" placeholder="Citizenship*" 
+                   pattern="^[A-Za-z\s\-]+$" 
+                   title="Only letters, spaces, and hyphens are allowed. Numbers are not accepted." 
+                   oninput="this.value = this.value.replace(/[0-9]/g, '')" required>
+
             <select name="civil_status" required>
                 <option value="">Select Civil Status</option>
                 <option>Single</option>
                 <option>Married</option>
             </select>
-            <input type="text" name="religion" placeholder="Religion" required>
+
+            <!-- Religion (no numbers allowed) -->
+            <input type="text" name="religion" placeholder="Religion*" 
+                   pattern="^[A-Za-z\s\-]+$" 
+                   title="Only letters, spaces, and hyphens are allowed. Numbers are not accepted." 
+                   oninput="this.value = this.value.replace(/[0-9]/g, '')" required>
 
             <hr class="form-divider">
 
             <!-- Parent & Guardian Details -->
-           <input type="text" name="father_name" placeholder="Father’s Name" 
+            <input type="text" name="father_name" placeholder="Father’s Name*" 
                    pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed" required>
-            <input type="text" name="father_occupation" placeholder="Occupation" required>
-            <input type="text" name="father_contact" placeholder="Contact No." pattern="\d{11}" title="Enter 11-digit phone number" required>
 
-            <input type="text" name="mother_name" placeholder="Mother’s Name" 
+            <input type="text" name="father_occupation" placeholder="Father’s Occupation*" 
                    pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed" required>
-            <input type="text" name="mother_occupation" placeholder="Occupation" required>
-            <input type="text" name="mother_contact" placeholder="Contact No." pattern="\d{11}" title="Enter 11-digit phone number" required>
 
-            <input type="text" name="guardian_name" placeholder="Guardian’s Name" 
+            <input type="text" name="father_contact" placeholder="Father’s Contact No. (09XXXXXXXXX)" 
+                   pattern="^09\d{9}$" title="Enter a valid 11-digit Philippine number starting with 09" required>
+
+            <input type="text" name="mother_name" placeholder="Mother’s Name*" 
+                   pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed" required>
+
+            <input type="text" name="mother_occupation" placeholder="Mother’s Occupation*" 
+                   pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed" required>
+
+            <input type="text" name="mother_contact" placeholder="Mother’s Contact No. (09XXXXXXXXX)" 
+                   pattern="^09\d{9}$" title="Enter a valid 11-digit Philippine number starting with 09" required>
+
+            <input type="text" name="guardian_name" placeholder="Guardian’s Name (Optional)" 
                    pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed">
-            <input type="text" name="guardian_occupation" placeholder="Occupation">
-            <input type="text" name="guardian_contact" placeholder="Contact No." pattern="\d{11}" title="Enter 11-digit phone number">
+
+            <input type="text" name="guardian_occupation" placeholder="Guardian’s Occupation (Optional)" 
+                   pattern="[A-Za-z\s\-]+" title="Only letters, spaces, and hyphens are allowed">
+
+            <input type="text" name="guardian_contact" placeholder="Guardian’s Contact No. (Optional)" 
+                   pattern="^09\d{9}$" title="Enter a valid 11-digit Philippine number starting with 09">
 
             <div class="button-row">
                 <button type="submit" class="btn-next">Next</button>
